@@ -3,65 +3,243 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f8f2e8">
+  <meta name="theme-color" content="#f5eedc">
 
-  <title>DIAMOND JUBILEE CELEBRATIONS</title>
+  <title>Diamond Jubilee Celebrations | 201 Engineer Regiment</title>
   <link rel="icon" type="image/png" href="./djc_logo.png">
 
+  <!-- Elegant serif typography inspired by the invitation -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --paper: #f5eedc;
+      --paper-light: #fffaf0;
+      --gold: #b18a3b;
+      --gold-light: #d9bd76;
+      --gold-dark: #806125;
+      --ink: #211c14;
+      --muted: #70634d;
+      --shadow: rgba(45, 32, 12, 0.16);
+    }
+
     * {
       box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--paper);
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background: #f8f2e8;
-      color: #68482f;
-      font-family: Georgia, serif;
+      color: var(--ink);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      background:
+        radial-gradient(
+          ellipse at 50% 0%,
+          rgba(255, 255, 255, 0.82),
+          transparent 58%
+        ),
+        linear-gradient(135deg, #f8f2e5, #eee2c7);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    button:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .page-frame {
+      position: relative;
+      min-height: 100vh;
+      padding: 22px 24px 18px;
+      isolation: isolate;
+    }
+
+    /* Subtle double-line gold frame */
+    .page-frame::before {
+      content: "";
+      position: fixed;
+      inset: 12px;
+      border: 1px solid rgba(177, 138, 59, 0.55);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .page-frame::after {
+      content: "";
+      position: fixed;
+      inset: 17px;
+      border: 1px solid rgba(177, 138, 59, 0.20);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .masthead {
+      width: 100%;
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 5px 12px 18px;
       text-align: center;
     }
 
-    header {
-      padding: 24px 12px 8px;
+    .crest {
+      display: block;
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      margin: 0 auto 10px;
+      filter: drop-shadow(0 2px 2px rgba(50, 35, 10, 0.10));
     }
 
-    .site-logo {
-      display: block;
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-      margin: 0 auto 14px;
+    .eyebrow {
+      margin: 0 0 5px;
+      color: var(--gold-dark);
+      font-family: "Cinzel", Georgia, serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
     }
 
     h1 {
-      font-size: clamp(23px, 5vw, 38px);
-      margin: 0 0 10px;
+      margin: 0;
+      font-family: "Cinzel", Georgia, serif;
+      font-size: clamp(22px, 3.2vw, 35px);
+      font-weight: 600;
+      letter-spacing: 0.055em;
+      line-height: 1.3;
+      text-wrap: balance;
     }
 
-    header p {
+    .motto {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: clamp(14px, 1.8vw, 18px);
+      font-weight: 500;
+      letter-spacing: 0.10em;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+      width: min(340px, 75%);
+      margin: 16px auto 0;
+      color: var(--gold);
+    }
+
+    .ornament::before,
+    .ornament::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold),
+        transparent
+      );
+    }
+
+    .ornament span {
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .viewer-shell {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 18px 12px;
+      border: 1px solid rgba(177, 138, 59, 0.66);
+      outline: 1px solid rgba(177, 138, 59, 0.20);
+      outline-offset: 5px;
+      background: rgba(255, 250, 240, 0.65);
+      box-shadow:
+        0 14px 40px var(--shadow),
+        inset 0 0 0 5px rgba(255, 255, 255, 0.35);
+    }
+
+    .viewer-topline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
       margin: 0 0 12px;
-      font-size: 15px;
+      color: var(--gold-dark);
+      font-family: "Cinzel", Georgia, serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.20em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .viewer-topline::before,
+    .viewer-topline::after {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: var(--gold-light);
     }
 
     #status {
-      padding: 14px 12px;
-      font: 14px Arial, sans-serif;
-      line-height: 1.6;
+      max-width: 620px;
+      margin: 18px auto;
+      padding: 14px 18px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    #status.error {
+      color: #842d24;
+    }
+
+    .loading-mark {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      margin-right: 9px;
+      border: 2px solid rgba(177, 138, 59, 0.25);
+      border-top-color: var(--gold-dark);
+      border-radius: 50%;
+      vertical-align: -4px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     #book-container {
       width: 100%;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 10px;
-      overflow: auto;
+      min-height: 180px;
+      overflow: hidden;
       text-align: center;
-      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
     }
 
     #book {
       margin: 0 auto;
+    }
+
+    #book-container .stf__parent {
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .controls {
@@ -70,146 +248,318 @@
       justify-content: center;
       flex-wrap: wrap;
       gap: 10px;
-      padding: 14px 10px;
-      font: 14px Arial, sans-serif;
+      padding: 18px 6px 8px;
+      font-size: 15px;
     }
 
-    button {
-      background: #815c3b;
-      color: white;
-      border: 0;
-      border-radius: 24px;
-      padding: 11px 16px;
+    .control-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 17px;
+      border: 1px solid var(--gold-dark);
+      border-radius: 2px;
+      color: var(--paper-light);
+      background: #71572c;
+      box-shadow: 0 2px 4px rgba(50, 35, 10, 0.10);
       cursor: pointer;
-      font-size: 14px;
+      transition:
+        background 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
       touch-action: manipulation;
     }
 
-    button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
+    .control-button:hover:not(:disabled) {
+      color: white;
+      background: #4d3a1d;
+      transform: translateY(-1px);
     }
 
-    button:focus-visible {
-      outline: 3px solid #c39a66;
-      outline-offset: 3px;
+    .control-button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .control-button.secondary {
+      color: var(--gold-dark);
+      background: transparent;
+    }
+
+    .control-button.secondary:hover:not(:disabled) {
+      color: var(--ink);
+      background: rgba(177, 138, 59, 0.10);
     }
 
     #page-number {
-      min-width: 100px;
+      min-width: 112px;
+      padding: 0 8px;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
     }
 
-    #zoom-level {
-      min-width: 48px;
-      font-weight: bold;
-    }
-
-    footer {
-      padding: 12px 10px 24px;
+    .keyboard-hint {
+      margin: 7px 0 0;
+      color: var(--muted);
       font-size: 13px;
+      text-align: center;
+    }
+
+    .footer {
+      padding: 22px 10px 10px;
+      color: var(--muted);
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .footer .footer-title {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--gold-dark);
+      font-family: "Cinzel", Georgia, serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.17em;
     }
 
     .hidden {
       display: none !important;
     }
 
-    @media (max-width: 480px) {
-      header {
-        padding-top: 16px;
+    /* Full-screen presentation */
+    .viewer-shell:fullscreen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      max-height: 100%;
+      padding: 18px;
+      overflow: auto;
+      border: 0;
+      outline: 0;
+      background:
+        radial-gradient(ellipse at top, #fffaf0, #e9ddc2);
+    }
+
+    .viewer-shell:fullscreen #book-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    .viewer-shell:fullscreen #book {
+      max-width: 100%;
+    }
+
+    .viewer-shell:fullscreen .viewer-topline {
+      flex: 0 0 auto;
+    }
+
+    .viewer-shell:fullscreen .controls {
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 650px) {
+      .page-frame {
+        padding: 15px 10px 12px;
       }
 
-      .site-logo {
-        width: 78px;
-        height: 78px;
+      .page-frame::before {
+        inset: 6px;
+      }
+
+      .page-frame::after {
+        inset: 10px;
+      }
+
+      .masthead {
+        padding: 4px 8px 14px;
+      }
+
+      .crest {
+        width: 62px;
+        height: 62px;
+        margin-bottom: 8px;
+      }
+
+      .eyebrow {
+        font-size: 9px;
+        letter-spacing: 0.16em;
+      }
+
+      .motto {
+        letter-spacing: 0.04em;
+      }
+
+      .viewer-shell {
+        padding: 12px 5px 9px;
+        outline-offset: 3px;
+      }
+
+      .viewer-topline {
+        font-size: 9px;
+        letter-spacing: 0.12em;
+      }
+
+      .viewer-topline::before,
+      .viewer-topline::after {
+        width: 18px;
       }
 
       .controls {
-        gap: 8px;
+        gap: 7px;
+        padding-top: 13px;
       }
 
-      button {
-        padding: 10px 13px;
+      .control-button {
+        min-height: 39px;
+        padding: 9px 11px;
         font-size: 13px;
+      }
+
+      #page-number {
+        min-width: 94px;
+        font-size: 14px;
+      }
+
+      .keyboard-hint {
+        padding: 0 8px;
+        font-size: 12px;
+      }
+
+      .footer {
+        padding-top: 18px;
+      }
+
+      .viewer-shell:fullscreen {
+        padding: 8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <img
-      src="./djc_logo.png"
-      alt="DJC Logo"
-      class="site-logo"
+  <main class="page-frame">
+    <header class="masthead">
+      <img
+        src="./djc_logo.png"
+        alt="Diamond Jubilee Celebrations emblem"
+        class="crest"
+      >
+
+      <p class="eyebrow">201 Engineer Regiment</p>
+      <h1>Diamond Jubilee Celebrations</h1>
+      <p class="motto">ERUNOOTRU ONNE EPPOTHUM MUNNE</p>
+
+      <div class="ornament" aria-hidden="true">
+        <span>❖</span>
+      </div>
+    </header>
+
+    <section
+      class="viewer-shell"
+      id="viewer-shell"
+      aria-label="Invitation flipbook"
     >
+      <div class="viewer-topline">
+        Your Invitation
+      </div>
 
-    <h1>DIAMOND JUBILEE CELEBRATIONS</h1>
-    <p>ERUNOOTRU ONNE EPPOTHUM MUNNE</p>
-  </header>
+      <div id="status" role="status" aria-live="polite">
+        <span class="loading-mark" aria-hidden="true"></span>
+        Preparing your invitation...
+      </div>
 
-  <div id="status" role="status" aria-live="polite">
-    Loading invitation...
-  </div>
+      <div id="book-container" class="hidden">
+        <div id="book"></div>
+      </div>
 
-  <div id="book-container" class="hidden">
-    <div id="book"></div>
-  </div>
+      <nav id="controls" class="controls hidden" aria-label="Invitation controls">
+        <button
+          id="prev"
+          class="control-button"
+          type="button"
+          disabled
+          aria-label="Turn to previous page"
+        >
+          <span aria-hidden="true">←</span> Previous
+        </button>
 
-  <div id="controls" class="controls hidden">
-    <button id="prev" type="button" disabled>
-      ← Previous
-    </button>
+        <span id="page-number" aria-live="polite">Page 1 of 1</span>
 
-    <span id="page-number">Page 1</span>
+        <button
+          id="next"
+          class="control-button"
+          type="button"
+          disabled
+          aria-label="Turn to next page"
+        >
+          Next <span aria-hidden="true">→</span>
+        </button>
 
-    <button id="next" type="button" disabled>
-      Next →
-    </button>
+        <button
+          id="fullscreen"
+          class="control-button secondary"
+          type="button"
+          aria-label="Enter full screen"
+        >
+          <span aria-hidden="true">⛶</span>
+          <span id="fullscreen-label">Full Screen</span>
+        </button>
+      </nav>
 
-    <button id="zoom-out" type="button" disabled
-      aria-label="Zoom out">
-      −
-    </button>
+      <p id="keyboard-hint" class="keyboard-hint hidden">
+        Turn pages using the buttons, swipe on mobile, or use your keyboard arrows.
+      </p>
+    </section>
 
-    <span id="zoom-level">100%</span>
-
-    <button id="zoom-in" type="button" disabled
-      aria-label="Zoom in">
-      +
-    </button>
-
-    <button id="zoom-reset" type="button" disabled>
-      Reset Zoom
-    </button>
-  </div>
-
-  <footer>
-    We look forward to celebrating with you! ❤️
-  </footer>
+    <footer class="footer">
+      <span class="footer-title">201 ENGINEER REGIMENT</span>
+      We look forward to celebrating with you.
+    </footer>
+  </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 
   <script>
     const status = document.getElementById("status");
+    const viewerShell = document.getElementById("viewer-shell");
     const bookContainer = document.getElementById("book-container");
     const bookElement = document.getElementById("book");
     const controls = document.getElementById("controls");
+    const keyboardHint = document.getElementById("keyboard-hint");
 
     const prevButton = document.getElementById("prev");
     const nextButton = document.getElementById("next");
-    const zoomInButton = document.getElementById("zoom-in");
-    const zoomOutButton = document.getElementById("zoom-out");
-    const zoomResetButton = document.getElementById("zoom-reset");
-    const zoomLevelLabel = document.getElementById("zoom-level");
+    const fullscreenButton = document.getElementById("fullscreen");
+    const fullscreenLabel = document.getElementById("fullscreen-label");
     const pageNumberLabel = document.getElementById("page-number");
 
-    // Example:
-    // https://fedcba499.github.io/?guest=swamy
-
+    // Example: https://fedcba499.github.io/?guest=swamy
     const params = new URLSearchParams(window.location.search);
     const guestId = params.get("guest");
 
+    // Only allow safe filenames in the invites directory.
     const validGuestId =
       guestId && /^[a-zA-Z0-9_-]+$/.test(guestId);
 
@@ -221,53 +571,17 @@
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
     let flipbook = null;
-    let zoomLevel = 1;
+    const imageObjectUrls = [];
 
-    const MIN_ZOOM = 1;
-    const MAX_ZOOM = 1.5;
-    const ZOOM_STEP = 0.1;
+    // 72 PDF points per inch. A scale of 300/72 renders at 300 DPI.
+    const RENDER_SCALE = 300 / 72;
+    const IMAGE_QUALITY = 0.96;
 
-    function updateZoom() {
-      // CSS zoom changes the displayed size and layout.
-      // Rendering at high resolution first helps retain detail.
-      bookElement.style.zoom = String(zoomLevel);
-
-      zoomLevelLabel.textContent =
-        `${Math.round(zoomLevel * 100)}%`;
-
-      zoomOutButton.disabled = zoomLevel <= MIN_ZOOM;
-      zoomInButton.disabled = zoomLevel >= MAX_ZOOM;
-      zoomResetButton.disabled = zoomLevel === MIN_ZOOM;
+    function setStatus(message, isError = false) {
+      status.classList.toggle("error", isError);
+      status.replaceChildren(document.createTextNode(message));
+      status.classList.remove("hidden");
     }
-
-    zoomInButton.addEventListener("click", () => {
-      zoomLevel = Math.min(
-        MAX_ZOOM,
-        Math.round((zoomLevel + ZOOM_STEP) * 10) / 10
-      );
-
-      updateZoom();
-    });
-
-    zoomOutButton.addEventListener("click", () => {
-      zoomLevel = Math.max(
-        MIN_ZOOM,
-        Math.round((zoomLevel - ZOOM_STEP) * 10) / 10
-      );
-
-      updateZoom();
-    });
-
-    zoomResetButton.addEventListener("click", () => {
-      zoomLevel = MIN_ZOOM;
-      updateZoom();
-
-      bookContainer.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "smooth"
-      });
-    });
 
     function updateControls() {
       if (!flipbook) return;
@@ -282,156 +596,232 @@
       nextButton.disabled = currentPage >= totalPages - 1;
     }
 
-    async function renderPdfPage(page, pageNumber) {
-      const originalViewport = page.getViewport({ scale: 1 });
-
-      // Render each page at high resolution, with a limit
-      // to prevent excessively large canvas dimensions.
-      const renderScale = Math.min(
-        3,
-        1800 / originalViewport.width,
-        2400 / originalViewport.height
-      );
-
-      const viewport = page.getViewport({
-        scale: renderScale
+    function canvasToJpegBlob(canvas) {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(
+          blob => {
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(new Error("Could not export a rendered PDF page."));
+            }
+          },
+          "image/jpeg",
+          IMAGE_QUALITY
+        );
       });
+    }
 
+    async function renderPdfPage(page) {
+      const viewport = page.getViewport({ scale: RENDER_SCALE });
       const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d", { alpha: false });
+
+      if (!context) {
+        throw new Error("Canvas rendering is not supported by this browser.");
+      }
+
       canvas.width = Math.ceil(viewport.width);
       canvas.height = Math.ceil(viewport.height);
 
-      const context = canvas.getContext("2d", {
-        alpha: false
-      });
-
+      // Use a white page background and render at full 300-DPI dimensions.
       context.fillStyle = "#ffffff";
       context.fillRect(0, 0, canvas.width, canvas.height);
 
       await page.render({
         canvasContext: context,
-        viewport: viewport
+        viewport
       }).promise;
 
-      // PNG avoids JPEG compression artifacts around text.
-      const imageUrl = canvas.toDataURL("image/png");
+      const blob = await canvasToJpegBlob(canvas);
+      const imageUrl = URL.createObjectURL(blob);
 
-      // Release the temporary canvas backing store.
+      imageObjectUrls.push(imageUrl);
+
+      // Free the canvas backing memory after the image has been created.
       canvas.width = 0;
       canvas.height = 0;
 
-      return {
-        imageUrl,
-        width: Math.ceil(viewport.width),
-        height: Math.ceil(viewport.height)
-      };
+      return imageUrl;
     }
 
     async function startInvitation() {
       try {
         if (!pdfUrl) {
-          status.textContent =
-            "Invitation not found. Please check the link you received.";
+          setStatus(
+            "This invitation link is incomplete. Please open the personalised link you received.",
+            true
+          );
           return;
         }
 
-        status.textContent = "Loading your invitation...";
+        setStatus("Loading your invitation...");
 
         const response = await fetch(pdfUrl);
 
         if (!response.ok) {
-          status.textContent =
-            "Invitation not found. Please check your link or contact the host.";
-          return;
+          throw new Error(
+            "Invitation PDF not found. Check the guest link or contact the host."
+          );
         }
 
         const pdfData = await response.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
 
-        const pdf = await pdfjsLib.getDocument({
-          data: pdfData
-        }).promise;
-
-        if (pdf.numPages === 0) {
-          throw new Error("The PDF has no pages.");
+        if (!pdf.numPages) {
+          throw new Error("The invitation PDF contains no pages.");
         }
 
         const pageImages = [];
-
-        let pageWidth = 0;
-        let pageHeight = 0;
+        let firstPageWidth = 595;
+        let firstPageHeight = 842;
 
         for (let i = 1; i <= pdf.numPages; i++) {
-          status.textContent =
-            `Preparing your invitation: page ${i} of ${pdf.numPages}...`;
+          setStatus(
+            `Preparing your invitation — page ${i} of ${pdf.numPages}...`
+          );
 
           const page = await pdf.getPage(i);
-          const rendered = await renderPdfPage(page, i);
 
           if (i === 1) {
-            pageWidth = rendered.width;
-            pageHeight = rendered.height;
+            const displayViewport = page.getViewport({ scale: 1 });
+            firstPageWidth = displayViewport.width;
+            firstPageHeight = displayViewport.height;
           }
 
-          pageImages.push(rendered.imageUrl);
+          const imageUrl = await renderPdfPage(page);
+          pageImages.push(imageUrl);
 
           page.cleanup();
         }
 
+        // Use PDF page dimensions for the flipbook's layout, while the
+        // actual page images retain their 300-DPI rendering resolution.
         flipbook = new St.PageFlip(bookElement, {
-          width: pageWidth,
-          height: pageHeight,
+          width: firstPageWidth,
+          height: firstPageHeight,
           size: "stretch",
           minWidth: 280,
-          maxWidth: 1000,
-          minHeight: 350,
-          maxHeight: 1400,
+          maxWidth: 720,
+          minHeight: 396,
+          maxHeight: 1020,
           autoSize: true,
           showCover: true,
           usePortrait: true,
           drawShadow: true,
-          maxShadowOpacity: 0.4,
+          maxShadowOpacity: 0.28,
           flippingTime: 900,
-          mobileScrollSupport: false
+          mobileScrollSupport: true,
+          clickEventForward: true,
+          useMouseEvents: true,
+          swipeDistance: 30
         });
 
         flipbook.loadFromImages(pageImages);
 
         bookContainer.classList.remove("hidden");
         controls.classList.remove("hidden");
+        keyboardHint.classList.remove("hidden");
+        status.classList.add("hidden");
 
-        flipbook.on("flip", updateControls);
-
-        // Use the same flipbook API and corner setting
-        // for both directions.
         prevButton.addEventListener("click", () => {
-          if (flipbook) flipbook.flipPrev("top");
+          if (flipbook) flipbook.flipPrev();
         });
 
         nextButton.addEventListener("click", () => {
-          if (flipbook) flipbook.flipNext("top");
+          if (flipbook) flipbook.flipNext();
         });
 
-        zoomLevel = 1;
-        updateZoom();
+        flipbook.on("flip", updateControls);
         updateControls();
-
-        status.textContent =
-          "Your invitation is ready. Tap, swipe or turn the pages.";
 
       } catch (error) {
         console.error("Invitation loading error:", error);
+        setStatus(
+          error.message || "Unable to display this invitation. Please try again.",
+          true
+        );
 
-        status.textContent =
-          "Unable to display this invitation. Please check that the PDF is valid and try again.";
+        // Clean up any generated image URLs if loading fails.
+        imageObjectUrls.forEach(url => URL.revokeObjectURL(url));
+        imageObjectUrls.length = 0;
       }
     }
 
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) {
+          if (!viewerShell.requestFullscreen) {
+            setStatus(
+              "Full screen is not supported in this browser. You can still view the invitation normally.",
+              true
+            );
+            return;
+          }
+
+          await viewerShell.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      } catch (error) {
+        console.error("Full-screen error:", error);
+        setStatus(
+          "Full screen could not be enabled. Please check your browser settings.",
+          true
+        );
+      }
+    }
+
+    fullscreenButton.addEventListener("click", toggleFullscreen);
+
+    document.addEventListener("fullscreenchange", () => {
+      const isFullscreen = Boolean(document.fullscreenElement);
+
+      fullscreenLabel.textContent = isFullscreen
+        ? "Exit Full Screen"
+        : "Full Screen";
+
+      fullscreenButton.setAttribute(
+        "aria-label",
+        isFullscreen ? "Exit full screen" : "Enter full screen"
+      );
+    });
+
+    // Keyboard navigation for desktop users.
+    document.addEventListener("keydown", event => {
+      if (!flipbook) return;
+
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        flipbook.flipPrev();
+      } else if (event.key === "ArrowRight") {
+        flipbook.flipNext();
+      } else if (event.key === "Escape" && document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+    });
+
+    // Release the generated page images when the visitor leaves.
+    window.addEventListener("pagehide", () => {
+      imageObjectUrls.forEach(url => URL.revokeObjectURL(url));
+    });
+
     if (typeof pdfjsLib === "undefined") {
-      status.textContent =
-        "Unable to load the PDF viewer. Please check your internet connection and refresh.";
+      setStatus(
+        "The PDF viewer could not load. Check your internet connection and refresh.",
+        true
+      );
     } else if (typeof St === "undefined" || !St.PageFlip) {
-      status.textContent =
-        "Unable to load the page-flip animation. Please refresh and try again.";
+      setStatus(
+        "The page-turn viewer could not load. Refresh the page and try again.",
+        true
+      );
     } else {
       startInvitation();
     }
