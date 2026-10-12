@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f2e8">
 
-  <title>Your Digital Invitation</title>
+  <title>DIAMOND JUBILEE CELEBRATIONS</title>
+  <link rel="icon" type="image/png" href="./djc_logo.png">
 
   <style>
     * {
@@ -26,8 +26,16 @@
       padding: 24px 12px 8px;
     }
 
+    .site-logo {
+      display: block;
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin: 0 auto 14px;
+    }
+
     h1 {
-      font-size: clamp(25px, 5vw, 38px);
+      font-size: clamp(23px, 5vw, 38px);
       margin: 0 0 10px;
     }
 
@@ -47,9 +55,9 @@
       max-width: 1000px;
       margin: 0 auto;
       padding: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      overflow: auto;
+      text-align: center;
+      -webkit-overflow-scrolling: touch;
     }
 
     #book {
@@ -61,7 +69,7 @@
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       padding: 14px 10px;
       font: 14px Arial, sans-serif;
     }
@@ -71,14 +79,29 @@
       color: white;
       border: 0;
       border-radius: 24px;
-      padding: 12px 18px;
+      padding: 11px 16px;
       cursor: pointer;
       font-size: 14px;
+      touch-action: manipulation;
     }
 
     button:disabled {
       opacity: 0.45;
       cursor: not-allowed;
+    }
+
+    button:focus-visible {
+      outline: 3px solid #c39a66;
+      outline-offset: 3px;
+    }
+
+    #page-number {
+      min-width: 100px;
+    }
+
+    #zoom-level {
+      min-width: 48px;
+      font-weight: bold;
     }
 
     footer {
@@ -87,13 +110,39 @@
     }
 
     .hidden {
-      display: none;
+      display: none !important;
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding-top: 16px;
+      }
+
+      .site-logo {
+        width: 78px;
+        height: 78px;
+      }
+
+      .controls {
+        gap: 8px;
+      }
+
+      button {
+        padding: 10px 13px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
 
 <body>
   <header>
+    <img
+      src="./djc_logo.png"
+      alt="DJC Logo"
+      class="site-logo"
+    >
+
     <h1>DIAMOND JUBILEE CELEBRATIONS</h1>
     <p>ERUNOOTRU ONNE EPPOTHUM MUNNE</p>
   </header>
@@ -116,35 +165,54 @@
     <button id="next" type="button" disabled>
       Next →
     </button>
+
+    <button id="zoom-out" type="button" disabled
+      aria-label="Zoom out">
+      −
+    </button>
+
+    <span id="zoom-level">100%</span>
+
+    <button id="zoom-in" type="button" disabled
+      aria-label="Zoom in">
+      +
+    </button>
+
+    <button id="zoom-reset" type="button" disabled>
+      Reset Zoom
+    </button>
   </div>
 
   <footer>
     We look forward to celebrating with you! ❤️
   </footer>
 
-  <!-- PDF.js renders PDF pages in the browser -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
-  <!-- StPageFlip provides the page-turn animation -->
   <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 
   <script>
     const status = document.getElementById("status");
     const bookContainer = document.getElementById("book-container");
+    const bookElement = document.getElementById("book");
     const controls = document.getElementById("controls");
 
-    // Read the guest ID from the URL.
-    // Example: https://fedcba499.github.io/?guest=swamy
+    const prevButton = document.getElementById("prev");
+    const nextButton = document.getElementById("next");
+    const zoomInButton = document.getElementById("zoom-in");
+    const zoomOutButton = document.getElementById("zoom-out");
+    const zoomResetButton = document.getElementById("zoom-reset");
+    const zoomLevelLabel = document.getElementById("zoom-level");
+    const pageNumberLabel = document.getElementById("page-number");
+
+    // Example:
+    // https://fedcba499.github.io/?guest=swamy
+
     const params = new URLSearchParams(window.location.search);
     const guestId = params.get("guest");
 
-    // Only allow simple filename characters.
-    // This prevents arbitrary paths from being supplied in the URL.
     const validGuestId =
-      guestId &&
-      /^[a-zA-Z0-9_-]+$/.test(guestId);
+      guestId && /^[a-zA-Z0-9_-]+$/.test(guestId);
 
-    // PDFs are stored in the "invites" folder.
     const pdfUrl = validGuestId
       ? `./invites/${guestId}.pdf`
       : null;
@@ -152,16 +220,121 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+    let flipbook = null;
+    let zoomLevel = 1;
+
+    const MIN_ZOOM = 1;
+    const MAX_ZOOM = 1.5;
+    const ZOOM_STEP = 0.1;
+
+    function updateZoom() {
+      // CSS zoom changes the displayed size and layout.
+      // Rendering at high resolution first helps retain detail.
+      bookElement.style.zoom = String(zoomLevel);
+
+      zoomLevelLabel.textContent =
+        `${Math.round(zoomLevel * 100)}%`;
+
+      zoomOutButton.disabled = zoomLevel <= MIN_ZOOM;
+      zoomInButton.disabled = zoomLevel >= MAX_ZOOM;
+      zoomResetButton.disabled = zoomLevel === MIN_ZOOM;
+    }
+
+    zoomInButton.addEventListener("click", () => {
+      zoomLevel = Math.min(
+        MAX_ZOOM,
+        Math.round((zoomLevel + ZOOM_STEP) * 10) / 10
+      );
+
+      updateZoom();
+    });
+
+    zoomOutButton.addEventListener("click", () => {
+      zoomLevel = Math.max(
+        MIN_ZOOM,
+        Math.round((zoomLevel - ZOOM_STEP) * 10) / 10
+      );
+
+      updateZoom();
+    });
+
+    zoomResetButton.addEventListener("click", () => {
+      zoomLevel = MIN_ZOOM;
+      updateZoom();
+
+      bookContainer.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth"
+      });
+    });
+
+    function updateControls() {
+      if (!flipbook) return;
+
+      const currentPage = flipbook.getCurrentPageIndex();
+      const totalPages = flipbook.getPageCount();
+
+      pageNumberLabel.textContent =
+        `Page ${currentPage + 1} of ${totalPages}`;
+
+      prevButton.disabled = currentPage <= 0;
+      nextButton.disabled = currentPage >= totalPages - 1;
+    }
+
+    async function renderPdfPage(page, pageNumber) {
+      const originalViewport = page.getViewport({ scale: 1 });
+
+      // Render each page at high resolution, with a limit
+      // to prevent excessively large canvas dimensions.
+      const renderScale = Math.min(
+        3,
+        1800 / originalViewport.width,
+        2400 / originalViewport.height
+      );
+
+      const viewport = page.getViewport({
+        scale: renderScale
+      });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+
+      const context = canvas.getContext("2d", {
+        alpha: false
+      });
+
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      await page.render({
+        canvasContext: context,
+        viewport: viewport
+      }).promise;
+
+      // PNG avoids JPEG compression artifacts around text.
+      const imageUrl = canvas.toDataURL("image/png");
+
+      // Release the temporary canvas backing store.
+      canvas.width = 0;
+      canvas.height = 0;
+
+      return {
+        imageUrl,
+        width: Math.ceil(viewport.width),
+        height: Math.ceil(viewport.height)
+      };
+    }
+
     async function startInvitation() {
       try {
-        // Check the URL.
         if (!pdfUrl) {
           status.textContent =
             "Invitation not found. Please check the link you received.";
           return;
         }
 
-        // Check whether the requested PDF exists.
         status.textContent = "Loading your invitation...";
 
         const response = await fetch(pdfUrl);
@@ -172,7 +345,6 @@
           return;
         }
 
-        // Read the PDF.
         const pdfData = await response.arrayBuffer();
 
         const pdf = await pdfjsLib.getDocument({
@@ -185,104 +357,62 @@
 
         const pageImages = [];
 
-        let pageWidth = 500;
-        let pageHeight = 700;
+        let pageWidth = 0;
+        let pageHeight = 0;
 
-        // Render each PDF page as an image.
         for (let i = 1; i <= pdf.numPages; i++) {
           status.textContent =
             `Preparing your invitation: page ${i} of ${pdf.numPages}...`;
 
           const page = await pdf.getPage(i);
+          const rendered = await renderPdfPage(page, i);
 
-          const originalViewport =
-            page.getViewport({ scale: 1 });
+          if (i === 1) {
+            pageWidth = rendered.width;
+            pageHeight = rendered.height;
+          }
 
-          // Limit rendering dimensions for performance.
-          const scale = Math.min(
-            1000 / originalViewport.width,
-            1400 / originalViewport.height
-          );
+          pageImages.push(rendered.imageUrl);
 
-          const viewport = page.getViewport({ scale });
-
-          pageWidth = Math.round(viewport.width);
-          pageHeight = Math.round(viewport.height);
-
-          const canvas = document.createElement("canvas");
-
-          canvas.width = pageWidth;
-          canvas.height = pageHeight;
-
-          const context = canvas.getContext("2d");
-
-          await page.render({
-            canvasContext: context,
-            viewport: viewport
-          }).promise;
-
-          pageImages.push(
-            canvas.toDataURL("image/jpeg", 0.92)
-          );
-
-          // Release the PDF page resources after rendering.
           page.cleanup();
         }
 
-        // Create the interactive flipbook.
-        const flipbook = new St.PageFlip(
-          document.getElementById("book"),
-          {
-            width: pageWidth,
-            height: pageHeight,
-            size: "stretch",
-            minWidth: 280,
-            maxWidth: 1000,
-            minHeight: 350,
-            maxHeight: 1400,
-            autoSize: true,
-            showCover: true,
-            usePortrait: true,
-            drawShadow: true,
-            maxShadowOpacity: 0.4,
-            flippingTime: 900,
-            mobileScrollSupport: false
-          }
-        );
+        flipbook = new St.PageFlip(bookElement, {
+          width: pageWidth,
+          height: pageHeight,
+          size: "stretch",
+          minWidth: 280,
+          maxWidth: 1000,
+          minHeight: 350,
+          maxHeight: 1400,
+          autoSize: true,
+          showCover: true,
+          usePortrait: true,
+          drawShadow: true,
+          maxShadowOpacity: 0.4,
+          flippingTime: 900,
+          mobileScrollSupport: false
+        });
 
         flipbook.loadFromImages(pageImages);
 
-        // Show the flipbook after the PDF has loaded.
         bookContainer.classList.remove("hidden");
         controls.classList.remove("hidden");
 
-        function updateControls() {
-          const currentPage =
-            flipbook.getCurrentPageIndex();
-
-          const totalPages =
-            flipbook.getPageCount();
-
-          document.getElementById("page-number").textContent =
-            `Page ${currentPage + 1} of ${totalPages}`;
-
-          document.getElementById("prev").disabled =
-            currentPage <= 0;
-
-          document.getElementById("next").disabled =
-            currentPage >= totalPages - 1;
-        }
-
         flipbook.on("flip", updateControls);
 
-        document.getElementById("prev").onclick = function () {
-          flipbook.flipPrev();
-        };
+        // Use the same flipbook API and corner setting
+        // for both directions.
+        prevButton.addEventListener("click", () => {
+          if (flipbook) flipbook.flipPrev("top");
+        });
 
-        document.getElementById("next").onclick = function () {
-          flipbook.flipNext();
-        };
+        nextButton.addEventListener("click", () => {
+          if (flipbook) flipbook.flipNext("top");
+        });
 
+        zoomLevel = 1;
+        updateZoom();
         updateControls();
 
         status.textContent =
@@ -296,7 +426,6 @@
       }
     }
 
-    // Check that the external libraries loaded successfully.
     if (typeof pdfjsLib === "undefined") {
       status.textContent =
         "Unable to load the PDF viewer. Please check your internet connection and refresh.";
