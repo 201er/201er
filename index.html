@@ -573,9 +573,11 @@
     let flipbook = null;
     const imageObjectUrls = [];
 
-    // 72 PDF points per inch. A scale of 300/72 renders at 300 DPI.
-    const RENDER_SCALE = 300 / 72;
-    const IMAGE_QUALITY = 0.96;
+    // Render at 150 DPI for mobile-friendly viewing.
+    const RENDER_SCALE = 150 / 72;
+
+    // JPEG quality: good balance between clarity and file size.
+    const IMAGE_QUALITY = 0.90;
 
     function setStatus(message, isError = false) {
       status.classList.toggle("error", isError);
